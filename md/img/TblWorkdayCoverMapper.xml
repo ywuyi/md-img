@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.business.mapper.TblWorkdayCoverMapper">
+    
+    <resultMap type="TblWorkdayCover" id="TblWorkdayCoverResult">
+        <result property="id"    column="id"    />
+        <result property="tenantId"    column="tenant_id"    />
+        <result property="type"    column="type"    />
+        <result property="coverDate"    column="cover_date"    />
+        <result property="workTime"    column="work_time"    />
+    </resultMap>
+
+    <sql id="selectTblWorkdayCoverVo">
+        select id, tenant_id, type, cover_date, work_time from tbl_workday_cover
+    </sql>
+
+    <select id="selectTblWorkdayCoverList" parameterType="TblWorkdayCover" resultMap="TblWorkdayCoverResult">
+        <include refid="selectTblWorkdayCoverVo"/>
+        <where>  
+            <if test="tenantId != null "> and tenant_id = #{tenantId}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="coverDate != null "> and cover_date = #{coverDate}</if>
+            <if test="workTime != null  and workTime != ''"> and work_time = #{workTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectTblWorkdayCoverById" parameterType="Long" resultMap="TblWorkdayCoverResult">
+        <include refid="selectTblWorkdayCoverVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTblWorkdayCover" parameterType="TblWorkdayCover" useGeneratedKeys="true" keyProperty="id">
+        insert into tbl_workday_cover
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tenantId != null">tenant_id,</if>
+            <if test="type != null">type,</if>
+            <if test="coverDate != null">cover_date,</if>
+            <if test="workTime != null">work_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="tenantId != null">#{tenantId},</if>
+            <if test="type != null">#{type},</if>
+            <if test="coverDate != null">#{coverDate},</if>
+            <if test="workTime != null">#{workTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTblWorkdayCover" parameterType="TblWorkdayCover">
+        update tbl_workday_cover
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="tenantId != null">tenant_id = #{tenantId},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="coverDate != null">cover_date = #{coverDate},</if>
+            <if test="workTime != null">work_time = #{workTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTblWorkdayCoverById" parameterType="Long">
+        delete from tbl_workday_cover where id = #{id}
+    </delete>
+
+    <delete id="deleteTblWorkdayCoverByIds" parameterType="String">
+        delete from tbl_workday_cover where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
